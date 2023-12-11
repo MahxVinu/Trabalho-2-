@@ -62,6 +62,7 @@ enum OpcoesAlteracao
     ALTERAR_FATOR_RH,
     ALTERAR_ENDERECO,
     ALTERAR_DATA_NASCIMENTO,
+    ALTERAR_CPF,
     CANCELAR_ALTERACAO
 };
 
@@ -78,7 +79,7 @@ void salvarEmArquivo(const struct VetorDinamico *pacientes, const char *nomeArqu
 void carregarDeArquivo(struct VetorDinamico *pacientes, const char *nomeArquivo);
 
 // Função para excluir um paciente com base no CPF
-void excluirPaciente(struct VetorDinamico *pacientes, const char *cpf, int indice);
+void excluirPaciente(struct VetorDinamico *pacientes, int indice);
 
 // Função para imprimir pacientes com um determinado tipo sanguíneo
 void imprimirPacientesPorTipoSanguineo(const struct VetorDinamico *pacientes, const char *tipoSanguineo);
@@ -93,4 +94,6 @@ void imprimir_ordem(const struct VetorDinamico *pacientes);
 char* lerCPF();
 
 void alterarCPF(struct VetorDinamico *pacientes, int indice);
+
+
 #endif //S1_1A_ETAPA_IP_PACIENTES_H

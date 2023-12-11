@@ -7,4 +7,6 @@ add_executable(S1_1a_Etapa_IP main.c
         pacientes.c
         pacientes.h
         pacientes.h
+        Atendimentos.c
+        Atendimentos.h
 )

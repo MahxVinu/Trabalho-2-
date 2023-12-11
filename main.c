@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "pacientes.h"
 #include <string.h>
-
+#include "Atendimentos.h"
 
 struct VetorDinamico pacientes;
 
@@ -28,28 +28,16 @@ enum PacienteMenuOptions {
     VOLTAR_PACIENTE
 };
 
-// Enum for atendimento menu options
-enum AtendimentoMenuOptions {
-    INSERIR_ATENDIMENTO = 1,
-    ALTERAR_ATENDIMENTO,
-    EXCLUIR_ATENDIMENTO,
-    LISTAR_POR_CODIGO_ATENDIMENTO,
-    LISTAR_POR_CODIGO_PACIENTE,
-    LISTAR_POR_DATA,
-    SOMA_CONSULTAS_PACIENTE,
-    SOMA_CONSULTAS_DATA,
-    SOMA_CONSULTAS_INTERVALO,
-    SALVARA,
-    VOLTAR_ATENDIMENTO
-};
+
+
 
 // Prototypes
 void menu();
 void menuP();
-void menuA();
 void limparBufferEntrada();
 void salvarDados();
 int realizarAlteracoesAntesDeSair();
+
 
 int main()
 {
@@ -68,11 +56,11 @@ int main()
 void menu()
 {
     printf("$$$$$$$$$$$$$$ CLINICA AJALMAR $$$$$$$$$$$$$$\n");
-    printf("            digite sua opcao\n");
-    printf("1. Paciente\n");
-    printf("2. Atendimento\n");
-    printf("3. Salvar\n");
-    printf("4. Sair\n");
+    printf("            DIGITE SUA OPCAO\n");
+    printf("1. PACIENTE\n");
+    printf("2. ATENDIMENTO\n");
+    printf("3. SALVAR\n");
+    printf("4. SAIR\n");
     printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
 
     int opcm = 0;
@@ -84,7 +72,7 @@ void menu()
             menuP();
             break;
         case ATENDIMENTO:
-            menuA();
+            menuAtendimento();
             break;
 
         case SALVAR:
@@ -118,17 +106,17 @@ void menu()
 void menuP()
 {
     printf("$$$$$$$$$$$$$$ PACIENTE $$$$$$$$$$$$$$\n");
-    printf("            digite sua opcao\n");
-    printf("1. Inserir novo paciente\n");
-    printf("2. Alterar paciente existente\n");
-    printf("3. Excluir um paciente\n");
-    printf("4. Checar dados pelo codigo do paciente\n");
-    printf("5. Mostrar pacientes de um tipo sanguineo\n");
-    printf("6. Mostrar pacientes pelo dia do atendimento\n");
-    printf("7. Mostrar todos os pacientes\n");
-    printf("8. Mostrar pacientes em ordem alfabetica\n");
-    printf("9. Salvar Alteracoes\n");
-    printf("10. Voltar\n");
+    printf("            DIGITE SUA OPCAO:\n");
+    printf("1. INSERIR NOVO PACIENTE\n");
+    printf("2. ALTERAR PACIENTE EXISTENTE\n");
+    printf("3. EXCLUIR UM PACIENTE\n");
+    printf("4. CHECAR DADOS PELO CODIGO DO PACIENTE\n");
+    printf("5. MOSTRAR PACIENTES DE UM TIPO SANGUINEO\n");
+    printf("6. MOSTRAR PACIENTES PELO DIA DO ATENDIMENTO\n");
+    printf("7.MOSTRAR TODOS OS PACIENTES\n");
+    printf("8. MOSTRAR PACIENTES EM ORDEM ALFABETICA\n");
+    printf("9. SALVAR ALTERACOES\n");
+    printf("10. VOLTAR\n");
     printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
 
     int opc = 0;
@@ -157,7 +145,7 @@ void menuP()
 
             else
             {
-                excluirPaciente(&pacientes, cpf, indice);
+                excluirPaciente(&pacientes,indice);
             }
 
             menuP();
@@ -261,53 +249,17 @@ void menuP()
         case VOLTAR_PACIENTE:
             menu();
             break;
+        case LISTAR_CONSULTA:
+
+
     }
 }
 
 // Menu de Atendimento
-void menuA()
-{
-    printf("$$$$$$$$$$$$$$ Atendimento $$$$$$$$$$$$$$\n");
-    printf("            digite sua opcao\n");
-    printf("1. Inserir novo atendimento\n");
-    printf("2. Alterar atendimento existente\n");
-    printf("3. Excluir um atendimento\n");
-    printf("4. Checar dados pelo codigo do atendimento\n");
-    printf("5. Checar dados pelo codigo do paciente\n");
-    printf("6. Mostrar pacientes em ordem de data de atendimento\n");
-    printf("7. Mostrar soma das consultas de um paciente\n");
-    printf("8. Mostrar soma das consultas de uma data de consulta\n");
-    printf("9. Mostrar soma das consultas de um intervalo\n");
-    printf("10. Voltar\n");
-    printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
-
-    int opcA = 0;
-    scanf("%d", &opcA);
-    limparBufferEntrada();
-
-    switch (opcA) {
-        case INSERIR_ATENDIMENTO:
-            menuA();
-            break;
 
 
-        // insere aqui os outros cases
 
-        case SALVARP:
-            menuA();
-            break;
 
-        case VOLTAR_ATENDIMENTO:
-            menu();
-            break;
-    }
-}
-
-void limparBufferEntrada()
-{
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-}
 
 
 // Função para salvar os dados em um arquivo

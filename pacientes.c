@@ -1,29 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <locale.h>
 #include <time.h>
-#include <windows.h>
 #include <ctype.h>
+#include "pacientes.h"
 
 
-struct paciente
-{
-    char *codigo;
-    char *nome;
-    char *rh;
-    char *RG;
-    char *cpf;
-    char *ts;
-    char *end;
-    struct tm dataNascimento;
-};
-
-struct VetorDinamico {
-    struct paciente *dados;
-    int tamanho;
-    int capacidade;
-};
 
 int compararPacientes(const void *a, const void *b) {
     const struct paciente *pacienteA = (const struct paciente *)a;
@@ -136,7 +118,7 @@ void lerTipoSanguineo(char *tipoSanguineo)
     printf("=====================================\n");
     scanf(" %c", tipoSanguineo);
     *tipoSanguineo = toupper(*tipoSanguineo); // Converte para maiúscula
-    while (*tipoSanguineo != 'A' && *tipoSanguineo != 'B' && *tipoSanguineo != 'O' && *tipoSanguineo != 'AB')
+    while (*tipoSanguineo != 'A' && *tipoSanguineo != 'B' && *tipoSanguineo != 'O' && strcmp(tipoSanguineo,"AB") != 0)
     {
         printf("Opção inválida. Escolha entre A, B, O ou AB: ");
         scanf(" %c", tipoSanguineo);
@@ -191,7 +173,7 @@ struct VetorDinamico *inserir(struct VetorDinamico *pacientes)
 
     //pedir rg
     char buffer[12];
-    char RG[12];
+
     printf("=====================================\n");
     printf("Insira o RG do paciente: \n");
     printf("=====================================\n");
@@ -319,6 +301,42 @@ struct VetorDinamico *inserir(struct VetorDinamico *pacientes)
     }
 }
 
+// Função para alterar CPF
+void alterarCPF(struct VetorDinamico *pacientes, int indice)
+{
+    char novoCPF[20];
+    printf("Insira o novo CPF: ");
+    fgets(novoCPF, sizeof(novoCPF), stdin);
+    novoCPF[strcspn(novoCPF, "\n")] = '\0';
+
+    // Verificar se o novo CPF já existe
+    int existeCPF = 0;
+    for (int i = 0; i < pacientes->tamanho; i++)
+    {
+        if (i != indice && strcmp(pacientes->dados[i].cpf, novoCPF) == 0)
+        {
+            existeCPF = 1;
+            break;
+        }
+    }
+
+    if (existeCPF)
+    {
+        printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+        printf("CPF %s ja existe, nao foi posivel alterar.\n", novoCPF);
+        printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+    }
+    else
+    {
+        // Liberar a memória do CPF antigo
+        free(pacientes->dados[indice].cpf);
+
+        // Alocar memória para o novo CPF
+        pacientes->dados[indice].cpf = strdup(novoCPF);
+
+        printf("CPF alterado com sucesso.\n");
+    }
+}
 
 // Função para buscar um paciente pelo CPF
 int buscarPacientePorCPF(const struct VetorDinamico *pacientes, const char *cpf)
@@ -333,17 +351,7 @@ int buscarPacientePorCPF(const struct VetorDinamico *pacientes, const char *cpf)
     return -1; // Retorna -1 se o paciente não for encontrado
 }
 // Enumeração para representar as opções de alteração
-enum OpcoesAlteracao
-{
-    ALTERAR_NOME = 1,
-    ALTERAR_RG,
-    ALTERAR_TIPO_SANGUINEO,
-    ALTERAR_FATOR_RH,
-    ALTERAR_ENDERECO,
-    ALTERAR_DATA_NASCIMENTO,
-    ALTERAR_CPF,
-    CANCELAR_ALTERACAO
-};
+
 
 // Função para alterar dados de um paciente
 void alterarPaciente(struct VetorDinamico *pacientes)
@@ -524,7 +532,7 @@ void carregarDeArquivo(struct VetorDinamico *pacientes, const char *nomeArquivo)
 
 
 // Função para excluir um paciente com base no CPF
-void excluirPaciente(struct VetorDinamico *pacientes, const char *cpf, int indice)
+void excluirPaciente(struct VetorDinamico *pacientes,int indice)
 {
     // Libera a memória alocada para o paciente excluído
     liberarPaciente(&pacientes->dados[indice]);
@@ -675,39 +683,4 @@ char* lerCPF() {
 
     return cpf;
 }
-// Função para alterar CPF
-void alterarCPF(struct VetorDinamico *pacientes, int indice)
-{
-    char novoCPF[20];
-    printf("Insira o novo CPF: ");
-    fgets(novoCPF, sizeof(novoCPF), stdin);
-    novoCPF[strcspn(novoCPF, "\n")] = '\0';
 
-    // Verificar se o novo CPF já existe
-    int existeCPF = 0;
-    for (int i = 0; i < pacientes->tamanho; i++)
-    {
-        if (i != indice && strcmp(pacientes->dados[i].cpf, novoCPF) == 0)
-        {
-            existeCPF = 1;
-            break;
-        }
-    }
-
-    if (existeCPF)
-    {
-        printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-        printf("CPF %s ja existe, nao foi posivel alterar.\n", novoCPF);
-        printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-    }
-    else
-    {
-        // Liberar a memória do CPF antigo
-        free(pacientes->dados[indice].cpf);
-
-        // Alocar memória para o novo CPF
-        pacientes->dados[indice].cpf = strdup(novoCPF);
-
-        printf("CPF alterado com sucesso.\n");
-    }
-}
